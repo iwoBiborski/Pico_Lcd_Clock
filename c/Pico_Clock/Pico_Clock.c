@@ -289,15 +289,15 @@ int Pico_Clock(void)
    LCD_2IN_Display((uint8_t * )BlackImage);
 
    draw_clock();
-   int i = 0;
-   int im = 0;
+
+   State_T state = CLOCK_INIT;
    long int ts1 = 0;
    long int ts2 = 0;
-   uint64_t tm1 = 0;
-   uint64_t tm2 = 0;
+
+   bool isSet = false;
    bool run = false;
-   draw_minutes(im, RED);
-   draw_seconds(i, RED);
+   draw_minutes(0, RED);
+   draw_seconds(0, RED);
    draw_hours(0, RED);
 
     Clock_T clock_current = {0};
@@ -305,41 +305,77 @@ int Pico_Clock(void)
 
    while(1)
    {
-        if(DEV_Digital_Read(key0 ) == 0)
+       if(DEV_Digital_Read(key0) == 0 && DEV_Digital_Read(key1) == 0)
+       {
+           state = CLOCK_INIT;
+       }
+        switch(state)
         {
-            run = !run;
-        }
-        ts2 = time_us_64()/1000;
-
-        if(run)
-        {
-            if(970 <= (ts2 -ts1) /*10 <= ts2 - ts1*/)
+            case WELCOME:
             {
-                update_clock(&clock_run);
-                ts1 = ts2;
-                if(clock_run.sec != clock_current.sec)
+                break;
+            }
+            case CLOCK_INIT:
+            {
+                /*if(DEV_Digital_Read(key3) == 0)
                 {
-                    draw_seconds(clock_current.sec, GREEN);
-                    draw_seconds(clock_run.sec, RED);
-                    draw_minutes(clock_current.min, RED);
-                    draw_hours(clock_current.hour, RED);
-                }
-                if(clock_run.min != clock_current.min)
+                    draw_hours(clock_current.hour, GREEN);
+                    clock_current.hour = (clock_current.hour + 1) % 6;
+                }*/
+
+                if(DEV_Digital_Read(key1) == 0)
                 {
                     draw_minutes(clock_current.min, GREEN);
-                    draw_minutes(clock_run.min, RED);
                     draw_hours(clock_current.hour, GREEN);
-                    draw_hours(clock_run.hour, RED);
+                    clock_current.min = ((clock_current.min + 1) % 60);
+                    clock_current.hour = ((clock_current.hour + 1) % 720);
                 }
-                DEV_Delay_us(5250); //DEV_Delay_ms(5) also good
-                clock_current = clock_run;
+
+                if(DEV_Digital_Read(key2) == 0)
+                {
+                    draw_seconds(clock_current.sec, GREEN);
+                    clock_current.sec += 1;
+                }
+
+                draw_hours(clock_current.hour, RED);
+                draw_minutes(clock_current.min, RED);
+                draw_seconds(clock_current.sec, RED);
+
+                if(DEV_Digital_Read(key0 ) == 0)
+                {
+                    state = CLOCK_RUN;
+                    clock_run = clock_current;
+                }
+                break;
+            }
+            case CLOCK_RUN:
+            {
+                ts2 = time_us_64()/1000;
+                if(970 <= (ts2 -ts1) /*10 <= ts2 - ts1*/)
+                {
+                    update_clock(&clock_run);
+                    ts1 = ts2;
+                    if(clock_run.sec != clock_current.sec)
+                    {
+                        draw_seconds(clock_current.sec, GREEN);
+                        draw_seconds(clock_run.sec, RED);
+                        draw_minutes(clock_current.min, RED);
+                        draw_hours(clock_current.hour, RED);
+                    }
+                    if(clock_run.min != clock_current.min)
+                    {
+                        draw_minutes(clock_current.min, GREEN);
+                        draw_minutes(clock_run.min, RED);
+                        draw_hours(clock_current.hour, GREEN);
+                        draw_hours(clock_run.hour, RED);
+                    }
+                    DEV_Delay_us(5250); //DEV_Delay_ms(5) also good
+                    clock_current = clock_run;
+                }
+                break;
             }
         }
-
-        else
-        {
-            ts1 = ts2;
-        }
+        Paint_DrawCircle(160, 120, 3, BLUE, DOT_PIXEL_2X2, DRAW_FILL_FULL);
         LCD_2IN_Display((uint8_t * )BlackImage);       
    }
 

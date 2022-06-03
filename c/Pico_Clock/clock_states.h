@@ -5,9 +5,7 @@ typedef enum Clock_State_Tag
 {
     WELCOME = 0,
     CLOCK_INIT,
-    CLOCK_START,
-    CLOCK_STOPER,
-    CLOCK_DEMO,
+    CLOCK_RUN,
     STOP
 }State_T;
 
