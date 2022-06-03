@@ -3,7 +3,7 @@
 
 # Relative path conversion top directories.
 set(CMAKE_RELATIVE_PATH_TOP_SOURCE "/home/iwo/Pico_code/c")
-set(CMAKE_RELATIVE_PATH_TOP_BINARY "/home/iwo/Pico_code/c/examples")
+set(CMAKE_RELATIVE_PATH_TOP_BINARY "/home/iwo/Pico_code/c/Pico_Clock")
 
 # Force unix paths in dependencies.
 set(CMAKE_FORCE_UNIX_PATHS 1)

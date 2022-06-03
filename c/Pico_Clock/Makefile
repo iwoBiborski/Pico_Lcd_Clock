@@ -70,7 +70,7 @@ EQUALS = =
 CMAKE_SOURCE_DIR = /home/iwo/Pico_code/c
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/iwo/Pico_code/c/examples
+CMAKE_BINARY_DIR = /home/iwo/Pico_code/c/Pico_Clock
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -99,9 +99,9 @@ edit_cache/fast: edit_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/iwo/Pico_code/c/examples/CMakeFiles /home/iwo/Pico_code/c/examples//CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/iwo/Pico_code/c/Pico_Clock/CMakeFiles /home/iwo/Pico_code/c/Pico_Clock//CMakeFiles/progress.marks
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/iwo/Pico_code/c/examples/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/iwo/Pico_code/c/Pico_Clock/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -290,13 +290,13 @@ GUI/fast:
 
 # Build rule for target.
 examples: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 examples
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 Pico_Clock
 .PHONY : examples
 
 # fast build rule for target.
 examples/fast:
-	$(MAKE) $(MAKESILENT) -f examples/CMakeFiles/examples.dir/build.make examples/CMakeFiles/examples.dir/build
-.PHONY : examples/fast
+	$(MAKE) $(MAKESILENT) -f Pico_Clock/CMakeFiles/examples.dir/build.make examples/CMakeFiles/examples.dir/build
+.PHONY : Pico_Clock/fast
 
 home/iwo/pico/pico-sdk/lib/tinyusb/src/class/audio/audio_device.obj: home/iwo/pico/pico-sdk/lib/tinyusb/src/class/audio/audio_device.c.obj
 
@@ -2090,7 +2090,7 @@ help:
 	@echo "... LCD"
 	@echo "... OLED"
 	@echo "... bs2_default"
-	@echo "... examples"
+	@echo "... Pico_Clock"
 	@echo "... main"
 	@echo "... home/iwo/pico/pico-sdk/lib/tinyusb/src/class/audio/audio_device.obj"
 	@echo "... home/iwo/pico/pico-sdk/lib/tinyusb/src/class/audio/audio_device.i"

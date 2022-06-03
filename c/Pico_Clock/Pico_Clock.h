@@ -38,6 +38,6 @@
 
 #include "Infrared.h"
 
-int LCD_2in_test(void);
+int Pico_Clock(void);
 
 #endif

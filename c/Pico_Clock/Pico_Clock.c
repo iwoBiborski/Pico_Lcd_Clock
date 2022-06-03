@@ -27,7 +27,7 @@
 # THE SOFTWARE.
 #
 ******************************************************************************/
-#include "LCD_Test.h"
+#include "Pico_Clock.h"
 #include "LCD_2in.h"
 #include "hardware/uart.h"
 #include "math.h"
@@ -254,10 +254,10 @@ void draw_clock()
     Paint_DrawString_EN((int)ct_11.x - 4, (int)ct_11.y + 2, "11", &Font20, GREEN, BLUE);
 }
 
-int LCD_2in_test(void)
+int Pico_Clock(void)
 {
     DEV_Delay_ms(100);
-    //printf("LCD_2in_test Demo\r\n");
+
     if(DEV_Module_Init()!=0){
         return -1;
     }
@@ -346,7 +346,6 @@ int LCD_2in_test(void)
     /* Module Exit */
     free(BlackImage);
     BlackImage = NULL;
-    
     
     DEV_Module_Exit();
     return 0;
