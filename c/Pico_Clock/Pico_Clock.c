@@ -317,12 +317,6 @@ int Pico_Clock(void)
             }
             case CLOCK_INIT:
             {
-                /*if(DEV_Digital_Read(key3) == 0)
-                {
-                    draw_hours(clock_current.hour, GREEN);
-                    clock_current.hour = (clock_current.hour + 1) % 6;
-                }*/
-
                 if(DEV_Digital_Read(key1) == 0)
                 {
                     draw_minutes(clock_current.min, GREEN);
@@ -351,7 +345,7 @@ int Pico_Clock(void)
             case CLOCK_RUN:
             {
                 ts2 = time_us_64()/1000;
-                if(970 <= (ts2 -ts1) /*10 <= ts2 - ts1*/)
+                if(970 <= (ts2 -ts1))
                 {
                     update_clock(&clock_run);
                     ts1 = ts2;
@@ -369,7 +363,7 @@ int Pico_Clock(void)
                         draw_hours(clock_current.hour, GREEN);
                         draw_hours(clock_run.hour, RED);
                     }
-                    DEV_Delay_us(5250); //DEV_Delay_ms(5) also good
+                    DEV_Delay_us(7750);
                     clock_current = clock_run;
                 }
                 break;
