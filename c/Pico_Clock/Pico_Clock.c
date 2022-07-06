@@ -1,12 +1,7 @@
 /*****************************************************************************
-* | File      	:   LCD_2in_test.c
-* | Author      :   Waveshare team
-* | Function    :   2inch LCD test demo
-* | Info        :
-*----------------
-* |	This version:   V1.0
-* | Date        :   2021-08-20
-* | Info        :
+* Authot: Iwo Biborski 
+* This applications uses graphical library provided by Waveshare team. According
+* to their licence permissions we add the following:   
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documnetation files (the "Software"), to deal

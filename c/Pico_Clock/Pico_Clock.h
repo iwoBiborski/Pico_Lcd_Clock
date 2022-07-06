@@ -1,12 +1,7 @@
 /*****************************************************************************
-* | File        :   LCD_Test.h
-* | Author      :  
-* | Function    :   test Demo
-* | Info        :
-*----------------
-* |	This version:   V1.0
-* | Date        :   2021-03-16
-* | Info        :   
+* Authot: Iwo Biborski 
+* This applications uses graphical library provided by Waveshare team. According
+* to their licence permissions we add the following:   
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documnetation files (the "Software"), to deal
@@ -27,8 +22,8 @@
 # THE SOFTWARE.
 #
 ******************************************************************************/
-#ifndef _LCD_TEST_H_
-#define _LCD_TEST_H_
+#ifndef PICO_CLOCK_H
+#define PICO_CLOCK_H
 
 #include "DEV_Config.h"
 #include "GUI_Paint.h"
