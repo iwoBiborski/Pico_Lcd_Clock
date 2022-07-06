@@ -32,31 +32,11 @@
 static int x_origin = 10;
 static int y_origin = 230;
 
-/* Patient parameter values */
-static int mass = 0;
-static int height = 0;
-static int age = 0;
-static int sex = 0;
-
-/* Data digits */
-static int ctr_mass[3] = {0};
-static int ctr_height[3] = {0};
-static int ctr_age[3] = {0};
-static int ctr_sex = 0;
-
 /* Control keys pins? */
 static int key0 = 15; 
 static int key1 = 17; 
 static int key2 = 2; 
 static int key3 = 3;
-
-static char start;
-
-static int hours[12] = {12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
-
-//static State_T current_state = PATIENT_DATA_INPUT_MASS;
-
-static int data[320] = {0};
 
 /* Set origin */
 void Set_Origin(int x_org, int y_org)
