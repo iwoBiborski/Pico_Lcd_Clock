@@ -30,9 +30,10 @@
 #include "ImageData.h"
 #include "Debug.h"
 #include <stdlib.h> // malloc() free()
+#include "clock_states.h"
 
 #include "Infrared.h"
 
-int Pico_Clock(void);
+int Pico_Clock(Clock_T *current_clk, Clock_T *run_clk);
 
 #endif

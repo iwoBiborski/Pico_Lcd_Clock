@@ -1,4 +1,5 @@
 #include "Infrared.h"
+#include "pico/stdlib.h"
 
 int Infrared_PIN;
 

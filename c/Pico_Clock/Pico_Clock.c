@@ -27,6 +27,7 @@
 #include "hardware/uart.h"
 #include "math.h"
 #include "clock_states.h"
+#include "pico/stdlib.h"
 
 /* Graph origin */
 static int x_origin = 10;
@@ -38,82 +39,6 @@ static int key1 = 17;
 static int key2 = 2; 
 static int key3 = 3;
 
-/* Set origin */
-void Set_Origin(int x_org, int y_org)
-{
-    x_origin = x_org;
-    y_origin = y_org;
-}
-
-/* Draws point of function graph relatively to origin */
-void Draw_Point_Up_To_Origin(int x, double (*func)(double))
-{
-        Paint_DrawPoint(x, y_origin - (int)func((double)(x-x_origin)), RED, DOT_PIXEL_3X3, DOT_FILL_AROUND);
-}
-
-void Draw_Point_Up_To_Origin_From_Data(int x, int y)
-{
-        Paint_DrawPoint(x + x_origin, y_origin - y, BLUE, DOT_PIXEL_3X3, DOT_FILL_AROUND);
-}
-
-void Draw_Line_Up_To_Origin(int x1, int x2, double (*func)(double))
-{
-    Paint_DrawLine(x1, y_origin - (int)func((double)(x1-x_origin)), x2, y_origin - (int)func((double)(x2-x_origin)), RED, DOT_PIXEL_1X1, DOT_FILL_AROUND);
-}
-
-void Draw_Scale(uint16_t color, int div_X, int div_Y, int unit_X, int unit_Y)
-{
-    int ct = div_X;
-    int numb = unit_X; 
-    while(x_origin + ct < 310)
-    {
-        Paint_DrawLine(x_origin + ct, y_origin - 3, x_origin + ct, y_origin + 3, color, DOT_PIXEL_1X1, LINE_STYLE_SOLID);
-        Paint_DrawLine(x_origin - ct, y_origin - 3, x_origin - ct, y_origin + 3, color, DOT_PIXEL_1X1, LINE_STYLE_SOLID);
-        char nm[3];
-        sprintf(nm, "%i", numb);
-        Paint_DrawString_EN( x_origin + ct - 5, y_origin + 5 , nm, &Font8, 0x000f, 0xfff0);
-        sprintf(nm, "%i", -numb);
-        Paint_DrawString_EN( x_origin - ct - 10, y_origin + 5 , nm, &Font8, 0x000f, 0xfff0);
-        ct += div_X;
-        numb += unit_X;
-    }
-    ct = div_Y;
-    numb = unit_Y;
-
-    while(y_origin + ct < 210 || y_origin - ct > 0)
-    {
-        Paint_DrawLine(x_origin - 3, y_origin + ct, x_origin + 3, y_origin + ct, color, DOT_PIXEL_1X1, LINE_STYLE_SOLID);
-        Paint_DrawLine(x_origin - 3, y_origin - ct, x_origin  + 3, y_origin - ct, color, DOT_PIXEL_1X1, LINE_STYLE_SOLID);
-        char nm[3];
-        sprintf(nm, "%i", -numb);
-        Paint_DrawString_EN( x_origin - 20, y_origin + ct - 3, nm, &Font8, 0x000f, 0xfff0);
-        sprintf(nm, "%i", numb);
-        Paint_DrawString_EN( x_origin - 15, y_origin - ct - 3, nm, &Font8, 0x000f, 0xfff0);
-        ct += div_Y;
-        numb += unit_Y;
-    }
-}
-
-void Draw_Cartesian(uint16_t color, int x_org, int y_org)
-{
-    if(x_org != x_origin || y_org != y_origin)
-    {
-        Set_Origin(x_org, y_org);
-    }
-
-    /*Draw X axis */
-    Paint_DrawLine(0, y_origin, 320, y_origin, color ,DOT_PIXEL_1X1, LINE_STYLE_SOLID);
-    Paint_DrawLine(315, y_origin + 5, 320, y_origin, color ,DOT_PIXEL_1X1, LINE_STYLE_SOLID);
-    Paint_DrawLine(315, y_origin - 5, 320, y_origin, color ,DOT_PIXEL_1X1, LINE_STYLE_SOLID);
-        
-    /*Draw Y axis */
-    Paint_DrawLine(x_origin, 0, x_origin, 240, color ,DOT_PIXEL_1X1, LINE_STYLE_SOLID);
-    Paint_DrawLine(x_origin + 5, 5, x_origin, 0, color ,DOT_PIXEL_1X1, LINE_STYLE_SOLID);
-    Paint_DrawLine(x_origin - 5, 5, x_origin, 0, color ,DOT_PIXEL_1X1, LINE_STYLE_SOLID);
-
-    Draw_Scale(color, 40, 30, 10, 10);
-}
-
 bool reserved_addr(uint8_t addr) {
 return (addr & 0x78) == 0 || (addr & 0x78) == 0x78;
 }
@@ -123,14 +48,6 @@ void Draw_Digit(int i, int position, uint16_t x_start, uint16_t y_start)
     char buff[1];
     itoa(i, buff, 10);
     Paint_DrawString_EN(x_start + 12*position, y_start, buff, &Font20, BLACK,  WHITE);
-}
-
-void draw_three_digit_param(const char *param_name, int *ctrs, int x_start, int y_start)
-{
-    Paint_DrawString_EN(10, y_start, param_name, &Font20, BLACK,  WHITE);
-    Draw_Digit(ctrs[0], 0, x_start, y_start);
-    Draw_Digit(ctrs[1], 1, x_start, y_start);
-    Draw_Digit(ctrs[2], 2, x_start, y_start);
 }
 
 void update_clock(Clock_T *clock)
@@ -229,7 +146,7 @@ void draw_clock()
     Paint_DrawString_EN((int)ct_11.x - 4, (int)ct_11.y + 2, "11", &Font20, GREEN, BLUE);
 }
 
-int Pico_Clock(void)
+int Pico_Clock(Clock_T *current_clk, Clock_T *run_clk)
 {
     DEV_Delay_ms(100);
 
@@ -275,9 +192,6 @@ int Pico_Clock(void)
    draw_seconds(0, RED);
    draw_hours(0, RED);
 
-    Clock_T clock_current = {0};
-    Clock_T clock_run = {0};
-
    while(1)
    {
        if(DEV_Digital_Read(key0) == 0 && DEV_Digital_Read(key1) == 0)
@@ -294,26 +208,26 @@ int Pico_Clock(void)
             {
                 if(DEV_Digital_Read(key1) == 0)
                 {
-                    draw_minutes(clock_current.min, GREEN);
-                    draw_hours(clock_current.hour, GREEN);
-                    clock_current.min = ((clock_current.min + 1) % 60);
-                    clock_current.hour = ((clock_current.hour + 1) % 720);
+                    draw_minutes(current_clk->min, GREEN);
+                    draw_hours(current_clk->hour, GREEN);
+                    current_clk->min = ((current_clk->min + 1) % 60);
+                    current_clk->hour = ((current_clk->hour + 1) % 720);
                 }
 
                 if(DEV_Digital_Read(key2) == 0)
                 {
-                    draw_seconds(clock_current.sec, GREEN);
-                    clock_current.sec += 1;
+                    draw_seconds(current_clk->sec, GREEN);
+                    current_clk->sec += 1;
                 }
 
-                draw_hours(clock_current.hour, RED);
-                draw_minutes(clock_current.min, RED);
-                draw_seconds(clock_current.sec, RED);
+                draw_hours(current_clk->hour, RED);
+                draw_minutes(current_clk->min, RED);
+                draw_seconds(current_clk->sec, RED);
 
                 if(DEV_Digital_Read(key0 ) == 0)
                 {
                     state = CLOCK_RUN;
-                    clock_run = clock_current;
+                    *run_clk = *current_clk;
                 }
                 break;
             }
@@ -322,24 +236,24 @@ int Pico_Clock(void)
                 ts2 = time_us_64()/1000;
                 if(970 <= (ts2 -ts1))
                 {
-                    update_clock(&clock_run);
+                    update_clock(run_clk);
                     ts1 = ts2;
-                    if(clock_run.sec != clock_current.sec)
+                    if(run_clk->sec != current_clk->sec)
                     {
-                        draw_seconds(clock_current.sec, GREEN);
-                        draw_seconds(clock_run.sec, RED);
-                        draw_minutes(clock_current.min, RED);
-                        draw_hours(clock_current.hour, RED);
+                        draw_seconds(current_clk->sec, GREEN);
+                        draw_seconds(run_clk->sec, RED);
+                        draw_minutes(current_clk->min, RED);
+                        draw_hours(current_clk->hour, RED);
                     }
-                    if(clock_run.min != clock_current.min)
+                    if(run_clk->min != current_clk->min)
                     {
-                        draw_minutes(clock_current.min, GREEN);
-                        draw_minutes(clock_run.min, RED);
-                        draw_hours(clock_current.hour, GREEN);
-                        draw_hours(clock_run.hour, RED);
+                        draw_minutes(current_clk->min, GREEN);
+                        draw_minutes(run_clk->min, RED);
+                        draw_hours(current_clk->hour, GREEN);
+                        draw_hours(run_clk->hour, RED);
                     }
-                    DEV_Delay_us(7750);
-                    clock_current = clock_run;
+                    DEV_Delay_us(7550);
+                    *current_clk = *run_clk;
                 }
                 break;
             }

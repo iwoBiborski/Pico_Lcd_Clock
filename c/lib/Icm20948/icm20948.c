@@ -1,4 +1,5 @@
 #include "icm20948.h"
+#include "pico/stdlib.h"
 #include <string.h>
 
 #define I2C_PORT i2c1

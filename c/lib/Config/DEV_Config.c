@@ -27,6 +27,10 @@
 # THE SOFTWARE.
 ******************************************************************************/
 #include "DEV_Config.h"
+#include "pico/stdlib.h"
+#include "hardware/spi.h"
+#include "hardware/i2c.h"
+#include "hardware/pwm.h"
 
 #define SPI_PORT spi1
 #define I2C_PORT spi1
